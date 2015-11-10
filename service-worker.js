@@ -1,21 +1,24 @@
-"use strict";
-
-function timeout(delay) {
-    return new Promise(function(resolve, reject) {
-        setTimeout(function() {
-            resolve(new Response('', {
-                status: 408,
-                statusText: 'Request timed out.'
-            }));
-        }, delay);
-    });
-}
-
-self.addEventListener('fetch', function(event) {
-
-  // Only check if the extension is *.js
-  if (/\.js$/.test(event.request.url)) {
-    // Attempt to fetch with timeout
-    event.respondWith(Promise.race([timeout(10), fetch(event.request)]));
-  }
+self.addEventListener('install', function(event) {
+    self.skipWaiting();
 });
+
+self.addEventListener('activate', function(event) {
+    if (self.clients && clients.claim) {
+        clients.claim();
+    }
+});
+
+self.onfetch = function(event) {
+  if (/\.js$/.test(event.request.url)) {
+    event.respondWith(
+      Promise.race([
+        fetch(event.request),
+        new Promise(function(resolve) {
+          setTimeout(resolve(new Response(''), {
+            status: 408, statusText: 'Request timeout'
+          }, 1000)); // timeout after 1 sec
+        })
+      ])
+    );
+  }
+};
