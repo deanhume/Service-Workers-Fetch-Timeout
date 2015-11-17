@@ -8,17 +8,21 @@ self.addEventListener('activate', function(event) {
     }
 });
 
-self.onfetch = function(event) {
-  if (/\.js$/.test(event.request.url)) {
-    event.respondWith(
-      Promise.race([
-        fetch(event.request),
-        new Promise(function(resolve) {
-          setTimeout(resolve(new Response(''), {
-            status: 408, statusText: 'Request timeout'
-          }, 1000)); // timeout after 1 sec
-        })
-      ])
-    );
+function timeout(delay) {
+    return new Promise(function(resolve, reject) {
+        setTimeout(function() {
+            resolve(new Response('', {
+                status: 408,
+                statusText: 'Request timed out.'
+            }));
+        }, delay);
+    });
+}
+
+self.addEventListener('fetch', function(event) {
+    // Only fetch JavaScript files for now
+    if (/\.js$/.test(event.request.url)) {
+    // Attempt to fetch with timeout
+    event.respondWith(Promise.race([timeout(1000), fetch(event.request)]));
   }
-};
+});
