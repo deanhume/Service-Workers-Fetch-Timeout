@@ -17,7 +17,7 @@ function timeout(delay) {
 self.addEventListener('fetch', function(event) {
     // Only fetch JavaScript files for now
     if (/\.js$/.test(event.request.url)) {
-      // Attempt to fetch with timeout of 3 secs
+      // Attempt to fetch with timeout
       Promise.race([timeout(500), fetch(event.request.url)]).then(
         function(value) {
           if (value instanceof Response && value.status === 200) {
