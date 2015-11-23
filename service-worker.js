@@ -27,7 +27,7 @@ self.addEventListener('fetch', function(event) {
             } else {
               // Timeout won
               console.log('The timeout won');
-              event.respondWith(new Response('', {
+              event.waitUntil(new Response('', {
                   status: 408,
                   statusText: 'Request timed out.'
               }));
