@@ -23,7 +23,7 @@ self.addEventListener('fetch', function(event) {
           if (value instanceof Response && value.status === 200) {
               // Network replied in time.
               console.log('The network won');
-              event.respondWith(value);
+              event.waitUntil(value);
             } else {
               // Timeout won
               console.log('The timeout won');
