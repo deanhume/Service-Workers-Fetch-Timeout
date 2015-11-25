@@ -11,10 +11,10 @@ self.addEventListener('activate', function(event) {
 function timeout(delay) {
     return new Promise(function(resolve, reject) {
         setTimeout(function(){
-          new Response('', {
+          resolve(new Response('', {
               status: 408,
               statusText: 'Request timed out.'
-          });
+          }));
         }, delay);
     });
 }
