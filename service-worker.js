@@ -22,7 +22,7 @@ function timeout(delay) {
 self.addEventListener('fetch', function(event) {
     // Only fetch JavaScript files for now
     if (/\.js$/.test(event.request.url)) {
-      event.respondWith(Promise.race([timeout(500), fetch(event.request.url)]));
+      event.respondWith(Promise.race([timeout(2000), fetch(event.request.url)]));
     } else {
       event.respondWith(fetch(event.request));
     }
